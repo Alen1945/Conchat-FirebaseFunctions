@@ -125,7 +125,9 @@ exports.createMessage = functions.https.onCall(async (data, context) => {
     .collection('RoomChat')
     .doc(`${data.idRoom}`)
     .update({
-      lastMessage: data.text,
+      lastMessage: data.text || '',
+      location: data.location || false,
+      image:data.image || false,
       lastAddedMessage: new Date(data.createdAt).toUTCString(),
     });
   await admin
@@ -135,8 +137,10 @@ exports.createMessage = functions.https.onCall(async (data, context) => {
     .collection('messages')
     .add({
       user: context.auth.uid,
-      text: data.text,
+      text: data.text || '',
       createdAt: new Date(data.createdAt).toUTCString(),
+      location:data.location || false,
+      image:data.image || false
     });
   return true;
 });
